@@ -1,0 +1,7 @@
+---
+
+- include_tasks: database.yml
+  args:
+    apply:
+      become: true
+      become_user: postgres
