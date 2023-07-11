@@ -44,27 +44,3 @@
     apply:
       become: true
       become_user: mastodon
-
-- include_tasks: redis.yml
-
-- include_tasks: selfsigned-ssl.yml
-  when: disable_letsencrypt | bool
-
-- include_tasks: mastodon-postflight.yml
-  args:
-    apply:
-      become: true
-      become_user: mastodon
-
-- include_tasks: letsencrypt.yml
-  args:
-    apply:
-      become: true
-      tags:
-        - letsencrypt 
-  when: disable_letsencrypt | bool == false
-
-- include_tasks: nginx.yml
-  args:
-    apply:
-      become: true
