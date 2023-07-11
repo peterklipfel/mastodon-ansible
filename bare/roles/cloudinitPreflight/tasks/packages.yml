@@ -1,0 +1,12 @@
+---
+
+- name: Install cloudinit-required packages
+  package:
+    name: "{{ item.package }}"
+    update_cache: yes
+  become: yes
+  with_items: "{{ cloudinitPreflight.packages }}"
+
+- name: Install ansible via pip for easier version matching
+  ansible.builtin.pip:
+    name: ansible==2.13.10
