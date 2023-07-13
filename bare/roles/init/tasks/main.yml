@@ -34,19 +34,7 @@
   when: python_installed is failed and apt_installed is succeeded
   become: yes
 
-- name: set ensure that needsrestart doesn't ever steal focus
-  hosts: all
-  gather_facts: false
-  become: true
-  vars:
-    os_environment:
-      - key: DEBIAN_FRONTEND
-        value: noninteractive
-  tasks:
-    - name: customize /etc/environment
-      ansible.builtin.lineinfile:
-        dest: "/etc/environment"
-        state: present
-        regexp: "^{{ item.key }}="
-        line: "{{ item.key }}={{ item.value }}"
-      with_items: "{{ os_environment }}"
+- name: ensure that needsrestart doesn't ever lock installations
+  copy:
+    dest: "/etc/needrestart/conf.d/10_noninteractive"
+    content: $nrconf{restart} = 'a'
