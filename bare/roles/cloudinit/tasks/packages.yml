@@ -5,8 +5,15 @@
     name: "{{ item.package }}"
     update_cache: yes
   become: yes
-  with_items: "{{ cloudinitPreflight.packages }}"
+  with_items: "{{ cloudinit.packages }}"
+
+- name: Creates directory
+  become: yes
+  file:
+    path: /etc/ansible
+    state: directory
 
 - name: Install ansible via pip for easier version matching
+  become: yes
   ansible.builtin.pip:
-    name: ansible==2.13.10
+    name: ansible==6.7.0
