@@ -54,6 +54,6 @@ redis:
     - package: "redis-server"
     - package: "redis-tools"
 
-cloudinitPreflight:
+cloudinit:
   packages:
     - package: "python3-pip"
