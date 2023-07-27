@@ -44,3 +44,9 @@
     apply:
       become: true
       become_user: mastodon
+
+- include_tasks: compile-assets.yml
+  args:
+    apply:
+      become: true
+      become_user: mastodon

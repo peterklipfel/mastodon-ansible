@@ -1,0 +1,32 @@
+- name: Bundle install
+  shell: "
+~/.rbenv/shims/bundle config set --local deployment 'true' && \
+~/.rbenv/shims/bundle config set --local without 'test' && \
+~/.rbenv/shims/bundle config set --local with 'development' && \
+~/.rbenv/shims/bundle install -j$(getconf _NPROCESSORS_ONLN)
+"
+  args:
+    chdir: "{{ mastodon_home }}/{{ mastodon_path }}"
+
+- name: Yarn install
+  command: yarn install --pure-lockfile
+  args:
+    chdir: "{{ mastodon_home }}/{{ mastodon_path }}"
+
+# This was moved from the postflight step because we compile to an AMI, and then
+# downsize for other instances
+#https://github.com/nodejs/node/issues/40455
+#It's possible that this is a bug with ruby 3.0.3 and gets fixed with Mastodon 4.0.0
+- name: Precompile assets with Legacy OpenSSL provider for RHEL9
+  shell: "NODE_OPTIONS=--openssl-legacy-provider RAILS_ENV=production ~/.rbenv/shims/bundle exec rails assets:precompile"
+  args:
+    chdir: "{{ mastodon_home }}/{{ mastodon_path }}"
+  when: 
+  - ansible_os_family == "RedHat"
+  - ansible_facts['distribution_major_version'] == "9"
+
+- name: Precompile assets
+  shell: "RAILS_ENV=production OTP_SECRET=precompile_placeholder SECRET_KEY_BASE=precompile_placeholder ~/.rbenv/shims/bundle exec rails assets:precompile"
+  args:
+    chdir: "{{ mastodon_home }}/{{ mastodon_path }}"
+  when: not ((ansible_os_family == "RedHat" ) and ansible_facts['distribution_major_version'] == "9")

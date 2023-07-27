@@ -33,8 +33,3 @@
   raw: apt update && apt install -y python3
   when: python_installed is failed and apt_installed is succeeded
   become: yes
-
-- name: ensure that needsrestart doesn't ever lock installations
-  copy:
-    dest: "/etc/needrestart/conf.d/10_noninteractive"
-    content: $nrconf{restart} = 'a'
