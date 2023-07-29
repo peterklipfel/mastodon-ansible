@@ -99,8 +99,8 @@
   become: yes
   become_user: root
   user:
-    name:   {{ mastodon_user }}
-    group:  www-data
+    name:   "{{ mastodon_user }}"
+    groups:  www-data
     append: yes
 
 - name: ensure that mastodon has access to www-data stuff as well
