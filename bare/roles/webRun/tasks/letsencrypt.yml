@@ -5,15 +5,15 @@
 - name: Copy letsencrypt nginx config on Debian systems
   template: 
     src: ../files/nginx/letsencrypt.conf.j2
-    dest: /etc/nginx/sites-available/mastodon.conf
+    dest: /etc/nginx/sites-available/letsencrypt.conf
   when:
     - ansible_os_family == "Debian"
     - not letsencrypt_cert.stat.exists
   
 - name: Symlink enabled site on Debian systems
   file:
-    src: "/etc/nginx/sites-available/mastodon.conf"
-    dest: "/etc/nginx/sites-enabled/mastodon.conf"
+    src: "/etc/nginx/sites-available/letsencrypt.conf"
+    dest: "/etc/nginx/sites-enabled/letsencrypt.conf"
     state: link
   when:
     - ansible_os_family == "Debian"
@@ -22,7 +22,7 @@
 - name: Copy and enable letsencrypt nginx config on RedHat systems
   template: 
     src: ../files/nginx/letsencrypt.conf.j2
-    dest: /etc/nginx/conf.d/mastodon.conf
+    dest: /etc/nginx/conf.d/letsencrypt.conf
   when:
     - ansible_os_family == "RedHat"
     - not letsencrypt_cert.stat.exists
@@ -31,7 +31,7 @@
   command: "systemctl reload-or-restart nginx"
 
 - name: Install letsencrypt cert
-  command: letsencrypt certonly -n --webroot -d {{ mastodon_host }} -w {{ mastodon_home }}/{{ mastodon_path }}/public/ --email "webmaster@{{ mastodon_host }}" --agree-tos
+  command: letsencrypt certonly -n --webroot -d {{ mastodon_host }} -w {{ mastodon_home }}/{{ mastodon_path }}/public/ --email "{{ letsencrypt_admin_email }}" --agree-tos
   when: not letsencrypt_cert.stat.exists
 
 - name: Letsencrypt Job

@@ -95,6 +95,17 @@
   when:
     - ansible_os_family == "RedHat"
 
+- name: Set mastodon home as part of the www-data group so that the following permissions are usable
+  become: yes
+  become_user: root
+  file:
+    path: "{{ mastodon_home }}"
+    owner: "{{ mastodon_user }}"
+    group: "www-data"
+    recurse: no
+  when:
+    - ansible_os_family == "Debian"
+
 - name: Ensure that we have correct file permissions with owner being the user and www-data being the group
   become: yes
   become_user: root
