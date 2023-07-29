@@ -98,6 +98,14 @@
 - name: Set mastodon home as part of the www-data group so that the following permissions are usable
   become: yes
   become_user: root
+  user:
+    name:   {{ mastodon_user }}
+    group:  www-data
+    append: yes
+
+- name: ensure that mastodon has access to www-data stuff as well
+  become: yes
+  become_user: root
   file:
     path: "{{ mastodon_home }}"
     owner: "{{ mastodon_user }}"
