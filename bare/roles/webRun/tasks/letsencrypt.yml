@@ -12,7 +12,7 @@
   
 - name: Symlink enabled site on Debian systems
   file:
-    src: "/etc/nginx/sites-available/letsencrypt.conf"
+    src: "/etc/nginx/sites-available/mastodon.conf"
     dest: "/etc/nginx/sites-enabled/mastodon.conf"
     state: link
   when:
